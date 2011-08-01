@@ -1,9 +1,6 @@
 /** AvlTree.java
  *  
  * Justin Ethier
- * COSC 600 Section 101
- * Programming Assignment #4
- * 
  * Description: Implemenation of an AVL Tree, along with code
  *              to test insertions on the tree.
  * 

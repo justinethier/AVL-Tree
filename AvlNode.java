@@ -1,9 +1,6 @@
 /** AvlNode.java
  *  
  * Justin Ethier
- * COSC 600 Section 101
- * Programming Assignment #4
- * 
  * Description: Implementation of an Avl Node.
  * 
  * Inputs:	N/A
