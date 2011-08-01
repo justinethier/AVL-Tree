@@ -1,34 +1,25 @@
-/** AvlTree.java
- *  
- * Justin Ethier
- * Description: Implemenation of an AVL Tree, along with code
- *              to test insertions on the tree.
- * 
- * Inputs:  None
- * 
- * Outputs: Infix / prefix traversals of a single tree, and
- *          insertion / rotation counts for several trees.
- * 
- * Procedures Called: 
- * 
- *  AvlTree.AvlTree() - Class constructor - Create an empty tree
- *  AvlTree.insert() - Inserts an element into the tree
- *  AvlTree.performInsertions - Perform a series of insertions into 
- *                          an empty tree, and return result counts
- * 
- */
-
 import java.util.*;
+
+/** 
+ * Implemenation of an AVL Tree, along with code to test insertions on the tree.
+ * 
+ * @author Justin Ethier
+ */
 
 class AvlTree {
 	private AvlNode root;
 	private Random r;
 	private boolean duplicate;
+	
+	// TODO: make these optional based on some sort of 'debug' flag
 	public int countInsertions;
 	public int countSingleRotations;
 	public int countDoubleRotations;
+	
 	/**
-	 * Avl Tree Constructor
+	 * Avl Tree Constructor.
+	 * 
+	 * Creates an empty tree
 	 */
 	AvlTree (){
 		root = null;
@@ -46,7 +37,7 @@ class AvlTree {
 	 * @param t Node
 	 * @return Height of the given node.
 	 */
-	private static int height (AvlNode t){
+	public static int height (AvlNode t){
 		return t == null ? -1 : t.height;
 	}
 	
@@ -57,18 +48,19 @@ class AvlTree {
 	 * @param b Second number
 	 * @return Maximum value
 	 */	
-	private static int max (int a, int b){
+	public static int max (int a, int b){
 		if (a > b)
 			return a;
 		return b;
 	}
 	
+	// TODO: ?? this should be refactored
 	private boolean isDuplicate (){
 		return duplicate;
 	}
 	
 	/**
-	 * External method to Insert an element into the Tree.
+	 * Insert an element into the tree.
 	 * 
 	 * @param x Element to insert into the tree
 	 * @return True - Success, the Element was added. 
@@ -85,12 +77,16 @@ class AvlTree {
 	}
 	
 	/**
+	 * Internal method to perform an actual insertion.
 	 * 
 	 * @param x Element to add
 	 * @param t Root of the tree
 	 * @return New root of the tree
+	 * 
+	 * TODO: does new node really need to be returned?
+	 * 		 perhaps just returning a boolean would be cleaner?
 	 */
-	private AvlNode insert (Comparable x, AvlNode t){
+	protected AvlNode insert (Comparable x, AvlNode t){
 		duplicate = false;
 		
 		if (t == null)
@@ -137,7 +133,7 @@ class AvlTree {
 	 * @param k2 Root of tree we are rotating
 	 * @return New root
 	 */
-	private static AvlNode rotateWithLeftChild (AvlNode k2){
+	protected static AvlNode rotateWithLeftChild (AvlNode k2){
 		AvlNode k1 = k2.left;
 		
 		k2.left = k1.right;
@@ -158,7 +154,7 @@ class AvlTree {
 	 * @param k3 Root of tree we are rotating
 	 * @return New root
 	 */
-	private static AvlNode doubleWithLeftChild (AvlNode k3){
+	protected static AvlNode doubleWithLeftChild (AvlNode k3){
 		k3.left = rotateWithRightChild (k3.left);
 		return rotateWithLeftChild (k3);
 	}
@@ -171,7 +167,7 @@ class AvlTree {
 	 * @param k1 Root of tree we are rotating.
 	 * @return New root
 	 */
-	private static AvlNode rotateWithRightChild (AvlNode k1){
+	protected static AvlNode rotateWithRightChild (AvlNode k1){
 		AvlNode k2 = k1.right;
 		
 		k1.right = k2.left;
@@ -192,11 +188,13 @@ class AvlTree {
 	 * @param k1 Root of tree we are rotating
 	 * @return New root
 	 */
-	private static AvlNode doubleWithRightChild (AvlNode k1){
+	protected static AvlNode doubleWithRightChild (AvlNode k1){
 		k1.right = rotateWithLeftChild (k1.right);
 		return rotateWithRightChild (k1);
 	}
 	
+	
+// TODO: docs
 	public void printInfix(){
 		printInfix (root);
 		System.out.println ("");
@@ -231,9 +229,21 @@ class AvlTree {
 		root = null;
 	}
 	
+public void remove(Comparable x){
+	// TODO: implement
+}
+
+public void find(Comparable x){ // TODO: would be more useful to store key/value,
+	                            // and use key to perform the lookup here...
+	// TODO: implement
+}
+	
 	/**
-	 * Performs a series of 100 unique insertions into 
+	 * Test method to perform a series of 100 unique insertions into 
 	 * a blank AVL Tree, and returns the tree.
+	 * 
+	 * TODO: this code would be better served in another Test class.
+	 * 
 	 * 
 	 * @return Tree with insertions
 	 */
@@ -264,6 +274,10 @@ class AvlTree {
 	}
 	
 	/**
+	 * Main entry point; contains test code for the tree.
+	 * 
+	 * TODO: move most of this into a test class, maybe just have a few assertions here,
+	 * if anything...
 	 * 
 	 * @param args Command-line interface to program
 	 */

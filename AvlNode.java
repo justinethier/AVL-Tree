@@ -1,27 +1,50 @@
-/** AvlNode.java
+/** 
+ * AvlNode is a container class that is used to store each element 
+ * (node) of an AVL tree. 
  *  
- * Justin Ethier
- * Description: Implementation of an Avl Node.
- * 
- * Inputs:	N/A
- * Outputs:	N/A
- * Procedures Called: N/A 
- * 
+ * @author Justin Ethier
  */
-
 class AvlNode {
-	AvlNode (Comparable theElement){
+	
+	/**
+	 * Node data
+	 */
+	protected Comparable	element;
+	
+	/**
+	 * Left child
+	 */
+	protected AvlNode		left;
+	
+	/**
+	 * Right child
+	 */
+	protected AvlNode		right;
+	
+	/**
+	 * Height of node
+	 */
+	protected int			height;
+	
+	/**
+	 * Constructor; creates a node without any children
+	 * 
+	 * @param theElement	The element contained in this node
+	 */
+	public AvlNode (Comparable theElement){
 		this (theElement, null, null);
 	}
 	
-	AvlNode (Comparable theElement, AvlNode lt, AvlNode rt){
+	/**
+	 * Constructor; creates a node with children
+	 * 
+	 * @param theElement	The element contained in this node
+	 * @param lt			Left child		
+	 * @param rt			Right child
+	 */
+	public AvlNode (Comparable theElement, AvlNode lt, AvlNode rt){
 		element = theElement;
 		left = lt;
 		right = rt;
 	}
-	
-	Comparable	element;	// Node data
-	AvlNode		left;		// Left child
-	AvlNode		right;		// Right child
-	int			height;		// Height of node
 }
