@@ -190,7 +190,11 @@ class AvlTree {
 		k1.right = rotateWithLeftChild (k1.right);
 		return rotateWithRightChild (k1);
 	}
-	
+
+
+// TODO: instead of printing, the below methods should return a
+//       value (string or array), that way test methods can assert
+//       on return values.... so it will be a better design.
 	
 // TODO: docs
 	public void printInfix(){
