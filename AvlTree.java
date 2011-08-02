@@ -233,6 +233,7 @@ class AvlTree {
 	
 public void remove(Comparable x){
 	// TODO: implement
+  // See: http://en.wikipedia.org/wiki/AVL_tree
   // trouble with this is that all the nodes need to be rebalanced...
 
   // I wonder if height needs to be pre-computed... may be a good time to refactor that
