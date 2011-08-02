@@ -8,7 +8,6 @@ import java.util.*;
 
 class AvlTree {
 	private AvlNode root;
-	private Random r;
 	private boolean duplicate;
 	
 	// TODO: make these optional based on some sort of 'debug' flag
@@ -23,7 +22,6 @@ class AvlTree {
 	 */
 	AvlTree (){
 		root = null;
-		r = new Random();
 		
 		duplicate = false;		
 		countInsertions = 0;
@@ -231,12 +229,41 @@ class AvlTree {
 	
 public void remove(Comparable x){
 	// TODO: implement
+  // trouble with this is that all the nodes need to be rebalanced...
+
+  // I wonder if height needs to be pre-computed... may be a good time to refactor that
 }
 
-public void find(Comparable x){ // TODO: would be more useful to store key/value,
-	                            // and use key to perform the lookup here...
-	// TODO: implement
-}
+  /**
+   * Search for an element within the tree. 
+   *
+   * @param x Element to find
+   * @param t Root of the tree
+   * @return True if the element is found, false otherwise
+   */
+  public boolean find(Comparable x){ // TODO: would be more useful to store key/value,
+	                                   // and use key to perform the lookup here...
+    return find(x, root); 
+  }
+
+  /**
+   * Internal find method; search for an element starting at the given node.
+   *
+   * @param x Element to find
+   * @param t Root of the tree
+   * @return True if the element is found, false otherwise
+   */
+  protected boolean find(Comparable x, AvlNode t) {
+    if (t == null){
+      return false; // The node was not found
+    } else if (x.compareTo(t.element) < 0){
+      return find(x, t.left);
+    } else if (x.compareTo(t.element) > 0){
+      return find(x, t.right); 
+    }
+
+    return true; // Can only reach here if node was found
+  }
 	
 	/**
 	 * Test method to perform a series of 100 unique insertions into 
@@ -248,6 +275,7 @@ public void find(Comparable x){ // TODO: would be more useful to store key/value
 	 * @return Tree with insertions
 	 */
 	public void performInsertions(){
+	  Random r = new Random();
 		int range = 500;
 		int count = 100;
 		Integer x;				
