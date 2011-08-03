@@ -275,16 +275,26 @@ class AvlTree {
     if (t == null){
       return; // Node was not found, nothing to remove
     } else if (x.compareTo(t.element) < 0){
-      remove(x, t.left);
+      if (t.left != null && x.compareTo(t.left.element) == 0) {
+    	  // Found the node to remove...
+    	  t.left = removeNode(x, t.left);
+      } else {
+    	  remove(x, t.left);
+      }
     } else if (x.compareTo(t.element) > 0){
-      remove(x, t.right); 
+        if (t.right != null && x.compareTo(t.right.element) == 0) {
+      	  // Found the node to remove...
+      	  t.right = removeNode(x, t.right);
+        } else {    	
+        	remove(x, t.right);
+        }
     } else {
-      // This is the node to remove
-      t = removeNode(x, t);
+      // Should never directly reach the node to remove
+      assert (false) : "Unreachable code (?)";
     }
   }
 
-  protected AvlNode removeNode(Comparable x, AvlNode t){
+  protected AvlNode removeNode(Comparable x, AvlNode t){ // TODO: remove x parameter (?)
       if (t.left == null && t.right == null){
         return null;
       } else if (t.left == null) {

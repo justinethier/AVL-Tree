@@ -41,7 +41,7 @@ class Test {
 	
 	public static void main (String []args){
 		AvlTree t = new AvlTree();
-		int testCases = 1000;
+		int testCases = 10;
 		int insertionCount = 0;
 		int singleRotationCount = 0;
 		int doubleRotationCount = 0;
@@ -100,12 +100,16 @@ class Test {
   		t.insert (new Integer(11));
   		t.insert (new Integer(22));
       t.remove (11);
+		System.out.println ("Prefix Traversal:");
+		System.out.println (t.serializePrefix());      
       assert (!t.find(11)) : "11 was not removed from tree";
 
 		  t.makeEmpty();		
   		t.insert (new Integer(11));
   		t.insert (new Integer(22));
       t.remove (22);
+		System.out.println ("Prefix Traversal:");
+		System.out.println (t.serializePrefix());      
       assert (!t.find(22)) : "22 was not removed from tree";
 	}
 }
