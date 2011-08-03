@@ -90,5 +90,22 @@ class Test {
 	    }
 
 	    assert (!t.insert(new Integer(9))) : "Duplicate 9 was inserted";
+
+		  t.makeEmpty();		
+  		t.insert (new Integer(2));
+      t.remove (2);
+      assert (t.isEmpty()) : "2 was not removed from tree";
+
+		  t.makeEmpty();		
+  		t.insert (new Integer(11));
+  		t.insert (new Integer(22));
+      t.remove (11);
+      assert (!t.find(11)) : "11 was not removed from tree";
+
+		  t.makeEmpty();		
+  		t.insert (new Integer(11));
+  		t.insert (new Integer(22));
+      t.remove (22);
+      assert (!t.find(22)) : "22 was not removed from tree";
 	}
 }

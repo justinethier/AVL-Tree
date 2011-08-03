@@ -258,15 +258,44 @@ class AvlTree {
 	public boolean isEmpty(){
 		return (root == null);
 	}
-	
-	@SuppressWarnings("unchecked")
-public void remove(Comparable x){
-	// TODO: implement
-  // See: http://en.wikipedia.org/wiki/AVL_tree
-  // trouble with this is that all the affected nodes need to be rebalanced...
 
-  // I wonder if height needs to be pre-computed... may be a good time to refactor that
-}
+// TODO: comment block	
+	@SuppressWarnings("unchecked")
+  public void remove(Comparable x){
+    if (x.compareTo(root.element) == 0){
+      // x is at root, remove it directly
+      root = removeNode(x, root);
+    } else {
+      remove(x, root);
+    }
+  }
+
+	@SuppressWarnings("unchecked")
+  protected void remove(Comparable x, AvlNode t){
+    if (t == null){
+      return; // Node was not found, nothing to remove
+    } else if (x.compareTo(t.element) < 0){
+      remove(x, t.left);
+    } else if (x.compareTo(t.element) > 0){
+      remove(x, t.right); 
+    } else {
+      // This is the node to remove
+      t = removeNode(x, t);
+    }
+  }
+
+  protected AvlNode removeNode(Comparable x, AvlNode t){
+      if (t.left == null && t.right == null){
+        return null;
+      } else if (t.left == null) {
+        return t.right; // TODO: rebalance?
+      } else if (t.right == null) {
+        return t.left; // TODO: rebalance?
+      } else {
+        // TODO
+        return t;
+      }
+  }
 
   /**
    * Search for an element within the tree. 
