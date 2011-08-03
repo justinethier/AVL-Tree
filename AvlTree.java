@@ -5,7 +5,6 @@ import java.lang.StringBuilder;
  * 
  * @author Justin Ethier
  */
-
 class AvlTree {
 	private AvlNode root;
 	
@@ -76,9 +75,6 @@ class AvlTree {
 	 * @param x Element to add
 	 * @param t Root of the tree
 	 * @return New root of the tree
-	 * 
-	 * TODO: does new node really need to be returned?
-	 * 		 perhaps just returning a boolean would be cleaner?
 	 * @throws Exception 
 	 */
 	@SuppressWarnings("unchecked")
@@ -267,7 +263,7 @@ class AvlTree {
 public void remove(Comparable x){
 	// TODO: implement
   // See: http://en.wikipedia.org/wiki/AVL_tree
-  // trouble with this is that all the nodes need to be rebalanced...
+  // trouble with this is that all the affected nodes need to be rebalanced...
 
   // I wonder if height needs to be pre-computed... may be a good time to refactor that
 }
@@ -307,16 +303,10 @@ public void remove(Comparable x){
 	
 	/**
 	 * Main entry point; contains test code for the tree.
-	 * 
-	 * TODO: move most of this into a test class, maybe just have a few assertions here,
-	 * if anything...
-	 * 
-	 * @param args Command-line interface to program
 	 */
-	public static void main (String []args){
+	public static void main () { //String []args){
 		AvlTree t = new AvlTree();
 		
-		//t.performInsertions();
 		t.insert (new Integer(2));
 		t.insert (new Integer(1));
 		t.insert (new Integer(4));

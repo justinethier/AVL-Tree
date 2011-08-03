@@ -88,5 +88,7 @@ class Test {
 	    for (int i = 10; i < 18; i++){ 
 	      assert (!t.find(i)) : i + " is found";
 	    }
+
+	    assert (!t.insert(new Integer(9))) : "Duplicate 9 was inserted";
 	}
 }
