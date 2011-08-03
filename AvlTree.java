@@ -1,16 +1,16 @@
-import java.util.*;
+import java.lang.StringBuilder;
 
 /** 
- * Implemenation of an AVL Tree, along with code to test insertions on the tree.
+ * Implementation of an AVL Tree, along with code to test insertions on the tree.
  * 
  * @author Justin Ethier
  */
 
 class AvlTree {
 	private AvlNode root;
-	private boolean duplicate;
 	
-	// TODO: make these optional based on some sort of 'debug' flag
+	// TODO: make these optional based on some sort of 'debug' flag?
+	// at the very least, make them read-only properties
 	public int countInsertions;
 	public int countSingleRotations;
 	public int countDoubleRotations;
@@ -22,8 +22,7 @@ class AvlTree {
 	 */
 	AvlTree (){
 		root = null;
-		
-		duplicate = false;		
+				
 		countInsertions = 0;
 		countSingleRotations = 0;
 		countDoubleRotations = 0;		
@@ -52,11 +51,6 @@ class AvlTree {
 		return b;
 	}
 	
-	// TODO: ?? this should be refactored
-	private boolean isDuplicate (){
-		return duplicate;
-	}
-	
 	/**
 	 * Insert an element into the tree.
 	 * 
@@ -64,14 +58,16 @@ class AvlTree {
 	 * @return True - Success, the Element was added. 
 	 *         False - Error, the element was a duplicate.
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean insert (Comparable x){
-		root = insert (x, root);
-		
-		if (isDuplicate())
+		try {
+			root = insert (x, root);
+			
+			countInsertions++;
+			return true;
+		} catch(Exception e){ // TODO: catch a DuplicateValueException instead!
 			return false;
-		
-		countInsertions++;
-		return true;
+		}
 	}
 	
 	/**
@@ -83,10 +79,10 @@ class AvlTree {
 	 * 
 	 * TODO: does new node really need to be returned?
 	 * 		 perhaps just returning a boolean would be cleaner?
+	 * @throws Exception 
 	 */
-	protected AvlNode insert (Comparable x, AvlNode t){
-		duplicate = false;
-		
+	@SuppressWarnings("unchecked")
+	protected AvlNode insert (Comparable x, AvlNode t) throws Exception{
 		if (t == null)
 			t = new AvlNode (x);
 		else if (x.compareTo (t.element) < 0){
@@ -116,8 +112,9 @@ class AvlTree {
 					countDoubleRotations++;
 				}
 		}
-		else
-			duplicate = true; //Duplicate
+		else {
+			throw new Exception("Attempting to insert duplicate value");
+		}
 		
 		t.height = max (height (t.left), height (t.right)) + 1;
 		return t;
@@ -192,34 +189,60 @@ class AvlTree {
 	}
 
 
-// TODO: instead of printing, the below methods should return a
-//       value (string or array), that way test methods can assert
-//       on return values.... so it will be a better design.
-	
-// TODO: docs
-	public void printInfix(){
-		printInfix (root);
-		System.out.println ("");
+	/**
+	 * Serialize the tree to a string using an infix traversal.
+	 * 
+	 * In other words, the tree items will be serialized in numeric order. 
+	 * 
+	 * @return String representation of the tree
+	 */
+	public String serializeInfix(){
+		StringBuilder str = new StringBuilder();
+		serializeInfix (root, str, " ");
+		return str.toString();
 	}
 
-	private void printInfix (AvlNode t){
+	/**
+	 * Internal method to infix-serialize a tree.
+	 * 
+	 * @param t		Tree node to traverse
+	 * @param str	Accumulator; string to keep appending items to.
+	 */
+	protected void serializeInfix(AvlNode t, StringBuilder str, String sep){
 		if (t != null){
-			printInfix (t.left);
-			System.out.print (t.element.toString() + " ");
-			printInfix (t.right);
+			serializeInfix (t.left, str, sep);
+			str.append(t.element.toString());
+			str.append(sep);
+			serializeInfix (t.right, str, sep);
 		}		
 	}
 	
-	public void printPrefix(){
-		printPrefix (root);
-		System.out.println ("");
+	/**
+	 * Serialize the tree to a string using a prefix traversal.
+	 * 
+	 * In other words, the tree items will be serialized in the order that
+	 * they are stored within the tree. 
+	 * 
+	 * @return String representation of the tree
+	 */	
+	public String serializePrefix(){
+		StringBuilder str = new StringBuilder();
+		serializePrefix (root, str, " ");
+		return str.toString();
 	}
 	
-	private void printPrefix (AvlNode t){
+	/**
+	 * Internal method to prefix-serialize a tree.
+	 * 
+	 * @param t		Tree node to traverse
+	 * @param str	Accumulator; string to keep appending items to.
+	 */	
+	private void serializePrefix (AvlNode t, StringBuilder str, String sep){
 		if (t != null){
-			System.out.print (t.element.toString() + " ");
-			printPrefix (t.left);
-			printPrefix (t.right);
+			str.append(t.element.toString());
+			str.append(sep);
+			serializePrefix (t.left, str, sep);
+			serializePrefix (t.right, str, sep);
 		}
 	}
 	
@@ -231,6 +254,16 @@ class AvlTree {
 		root = null;
 	}
 	
+	/**
+	 * Determine if the tree is empty.
+	 * 
+	 * @return True if the tree is empty 
+	 */
+	public boolean isEmpty(){
+		return (root == null);
+	}
+	
+	@SuppressWarnings("unchecked")
 public void remove(Comparable x){
 	// TODO: implement
   // See: http://en.wikipedia.org/wiki/AVL_tree
@@ -246,6 +279,7 @@ public void remove(Comparable x){
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
+  @SuppressWarnings("unchecked")
   public boolean find(Comparable x){ // TODO: would be more useful to store key/value,
 	                                   // and use key to perform the lookup here...
     return find(x, root); 
@@ -258,6 +292,7 @@ public void remove(Comparable x){
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
+  @SuppressWarnings("unchecked")
   protected boolean find(Comparable x, AvlNode t) {
     if (t == null){
       return false; // The node was not found
@@ -271,42 +306,6 @@ public void remove(Comparable x){
   }
 	
 	/**
-	 * Test method to perform a series of 100 unique insertions into 
-	 * a blank AVL Tree, and returns the tree.
-	 * 
-	 * TODO: this code would be better served in another Test class.
-	 * 
-	 * 
-	 * @return Tree with insertions
-	 */
-	public void performInsertions(){
-	  Random r = new Random();
-		int range = 500;
-		int count = 100;
-		Integer x;				
-		
-		// Delete any old nodes from the tree
-		makeEmpty();
-		
-		// Clear the counts
-		countInsertions = 0;
-		countSingleRotations = 0;
-		countDoubleRotations = 0;
-		
-		// Generate and insert 100 random numbers
-		for (int i = 0; i < count; i++){
-			// Prevent insertion of duplicates
-			//
-			//  Note: must take care in selecting parameters,
-			//        to avoid an infinite loop. If count > max - min,
-			//        then we have a problem.
-			do {
-				x = new Integer (r.nextInt(range) + 1);
-			}while (!insert (x));
-		}
-	}
-	
-	/**
 	 * Main entry point; contains test code for the tree.
 	 * 
 	 * TODO: move most of this into a test class, maybe just have a few assertions here,
@@ -316,10 +315,6 @@ public void remove(Comparable x){
 	 */
 	public static void main (String []args){
 		AvlTree t = new AvlTree();
-		int testCases = 1000;
-		int insertionCount = 0;
-		int singleRotationCount = 0;
-		int doubleRotationCount = 0;
 		
 		//t.performInsertions();
 		t.insert (new Integer(2));
@@ -332,25 +327,9 @@ public void remove(Comparable x){
 		t.insert (new Integer(7));
 		
 		System.out.println ("Infix Traversal:");
-		t.printInfix();
+		System.out.println(t.serializeInfix());
 		
 		System.out.println ("Prefix Traversal:");
-		t.printPrefix();
-		
-		System.out.println ("Perfoming a series of " + testCases + " test cases.");
-		System.out.println ("\nSR\tDR\n");
-		
-		for (int i=0; i < testCases; i++) {
-			t.performInsertions();
-			insertionCount      += t.countInsertions;
-			singleRotationCount += t.countSingleRotations;
-			doubleRotationCount += t.countDoubleRotations;
-			
-			System.out.println (t.countSingleRotations + "\t" + t.countDoubleRotations);
-		}
-		
-		System.out.println ("Total Insertions:       " + insertionCount);
-		System.out.println ("Total Single Rotations: " + singleRotationCount);
-		System.out.println ("Total Double Rotations: " + doubleRotationCount);
+		System.out.println(t.serializePrefix());
 	}
 }
