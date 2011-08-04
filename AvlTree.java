@@ -3,6 +3,12 @@ import java.lang.StringBuilder;
 /** 
  * Implementation of an AVL Tree, along with code to test insertions on the tree.
  * 
+ *  Based on code written by Mark Allen Weiss in his book 
+ *  Data Structures and Algorithm Analysis in Java.
+ *
+ *  Code for remove is based upon postings at:
+ *  http://www.dreamincode.net/forums/topic/214510-working-example-of-avl-tree-remove-method/
+ *
  * @author Justin Ethier
  */
 class AvlTree {
@@ -259,6 +265,379 @@ class AvlTree {
 		return (root == null);
 	}
 
+
+
+    /**
+     * Find the smallest item in the tree.
+     * @return smallest item or null if empty.
+     */
+    public Comparable findMin( )
+    {
+        if( isEmpty( ) ) return null;
+
+        return findMin( root ).element;
+    }
+
+    /**
+     * Find the largest item in the tree.
+     * @return the largest item of null if empty.
+     */
+    public Comparable findMax( )
+    {
+        if( isEmpty( ) ) return null;
+        return findMax( root ).element;
+    }
+
+    /**
+     * Internal method to find the smallest item in a subtree.
+     * @param t the node that roots the tree.
+     * @return node containing the smallest item.
+     */
+    private AvlNode findMin(AvlNode t) //<AnyType> findMin( AvlNode<AnyType> t )
+    {
+        if( t == null )
+            return t;
+
+        while( t.left != null )
+            t = t.left;
+        return t;
+    }
+
+    /**
+     * Internal method to find the largest item in a subtree.
+     * @param t the node that roots the tree.
+     * @return node containing the largest item.
+     */
+    private AvlNode findMax( AvlNode t )
+    {
+        if( t == null )
+            return t;
+
+        while( t.right != null )
+            t = t.right;
+        return t;
+    }
+
+
+// A version of remove from http://www.dreamincode.net/forums/topic/214510-working-example-of-avl-tree-remove-method/
+// but it needs some attention and does not appear to be 100% correct
+/**
+ * Remove from the tree. Nothing is done if x is not found.
+ * @param x the item to remove.
+ */
+public void remove( Comparable x ) {
+    root = remove(x, root);
+}
+
+//public AvlNode<AnyType> remove(AnyType x, AvlNode<AnyType> t) {
+@SuppressWarnings("unchecked")
+public AvlNode remove(Comparable x, AvlNode t) {
+    if (t==null)    {
+        System.out.println("Sorry but you're mistaken, " + t + " doesn't exist in this tree :)\n");
+        return null;
+    }
+    System.out.println("Remove starts... " + t.element + " and " + x);
+
+    if (x.compareTo(t.element) < 0 ) {
+        t.left = remove(x,t.left);
+        int l = t.left != null ? t.left.height : 0;
+
+        if((t.right != null) && (t.right.height - l >= 2)) {
+            int rightHeight = t.right.right != null ? t.right.right.height : 0;
+            int leftHeight = t.right.left != null ? t.right.left.height : 0;
+
+            if(rightHeight >= leftHeight)
+                t = rotateWithLeftChild(t);            
+            else
+                t = doubleWithRightChild(t);
+        }
+    }
+    else if (x.compareTo(t.element) > 0) {
+        t.right = remove(x,t.right);
+        int r = t.right != null ? t.right.height : 0;
+        if((t.left != null) && (t.left.height - r >= 2)) {
+            int leftHeight = t.left.left != null ? t.left.left.height : 0;
+            int rightHeight = t.left.right != null ? t.left.right.height : 0;
+            if(leftHeight >= rightHeight)
+                t = rotateWithRightChild(t);               
+            else
+                t = doubleWithLeftChild(t);
+        }
+    }
+    /*Här har vi hamnat när vi står i noden som skall tas bort. Kolla om det finns ett vänstra delträd, isåfall plocka ut det största elementet och
+41
+     * flytta ner det till rooten. */
+    else if(t.left !=null) {
+        t.element = findMax(t.left).element;
+        remove(t.element, t.left);
+     
+        if((t.right != null) && (t.right.height - t.left.height >= 2)) {
+            int rightHeight = t.right.right != null ? t.right.right.height : 0;
+            int leftHeight = t.right.left != null ? t.right.left.height : 0;
+     
+            if(rightHeight >= leftHeight)
+                t = rotateWithLeftChild(t);            
+            else
+                t = doubleWithRightChild(t);
+        }
+    }
+     
+    else
+        t = (t.left != null) ? t.left : t.right;
+     
+    if(t != null) {
+        int leftHeight = t.left != null ? t.left.height : 0;
+        int rightHeight = t.right!= null ? t.right.height : 0;
+        t.height = Math.max(leftHeight,rightHeight) + 1;
+    }
+    return t;
+} //End of remove...
+
+/* snippet of test code, and a potential fix?
+	import static org.junit.Assert.*;
+002
+ 
+003
+import org.junit.Test;
+004
+ 
+005
+ 
+006
+public class AvlTreeTest {
+007
+    private AvlTree<Integer> tree = new AvlTree<Integer>();
+008
+ 
+009
+    private void insert(Integer...integers) {
+010
+        for(Integer i:integers)
+011
+            tree.insert(i);
+012
+    }
+013
+ 
+014
+    private boolean checkBalanceOfTree(AvlTree.AvlNode<Integer> current) {
+015
+         
+016
+        boolean balancedRight = true, balancedLeft = true;
+017
+        int leftHeight = 0, rightHeight = 0;
+018
+         
+019
+        if (current.right != null) {
+020
+            balancedRight = checkBalanceOfTree(current.right);
+021
+            rightHeight = getDepth(current.right);
+022
+        }
+023
+         
+024
+        if (current.left != null) {
+025
+            balancedLeft = checkBalanceOfTree(current.left);
+026
+            leftHeight = getDepth(current.left);
+027
+        }
+028
+         
+029
+        return balancedLeft && balancedRight && Math.abs(leftHeight - rightHeight) < 2;
+030
+    }
+031
+     
+032
+    private int getDepth(AvlTree.AvlNode<Integer> n) {
+033
+        int leftHeight = 0, rightHeight = 0;
+034
+         
+035
+        if (n.right != null)
+036
+            rightHeight = getDepth(n.right);
+037
+        if (n.left != null)
+038
+            leftHeight = getDepth(n.left);
+039
+         
+040
+        return Math.max(rightHeight, leftHeight)+1;
+041
+    }
+042
+     
+043
+    private boolean checkOrderingOfTree(AvlTree.AvlNode<Integer> current) {
+044
+        if(current.left != null) {
+045
+            if(current.left.element.compareTo(current.element) > 0)
+046
+                return false;
+047
+            else
+048
+                return checkOrderingOfTree(current.left);
+049
+        } else  if(current.right != null) {
+050
+            if(current.right.element.compareTo(current.element) < 0)
+051
+                return false;
+052
+            else
+053
+                return checkOrderingOfTree(current.right);
+054
+        } else if(current.left == null && current.right == null)
+055
+            return true;
+056
+         
+057
+        return true;
+058
+    }
+059
+ 
+060
+    @Test
+061
+    public void testRemove() {
+062
+        assertTrue(tree.isEmpty());
+063
+ 
+064
+        insert(16,24,36,19,44,28,61,74,83,64,52,65,86,93,88);
+065
+        assertTrue(tree.findMin() == 16);
+066
+        assertTrue(tree.findMax() == 93);
+067
+ 
+068
+        assertTrue(checkBalanceOfTree(tree.root));
+069
+        assertTrue(checkOrderingOfTree(tree.root));
+070
+ 
+071
+        tree.remove(88);
+072
+        assertTrue(checkBalanceOfTree(tree.root));
+073
+        assertTrue(checkOrderingOfTree(tree.root));
+074
+        assertFalse(tree.contains(88));
+075
+         
+076
+        tree.remove(19);
+077
+        assertTrue(checkBalanceOfTree(tree.root));
+078
+        assertTrue(checkOrderingOfTree(tree.root));
+079
+        assertFalse(tree.contains(19));
+080
+         
+081
+        tree.remove(16);
+082
+        assertTrue(checkBalanceOfTree(tree.root));
+083
+        assertTrue(checkOrderingOfTree(tree.root));
+084
+        assertFalse(tree.contains(16));
+085
+         
+086
+        tree.remove(28);
+087
+        assertTrue(checkBalanceOfTree(tree.root));
+088
+        assertTrue(checkOrderingOfTree(tree.root));
+089
+        assertFalse(tree.contains(28));
+090
+         
+091
+        tree.remove(24);
+092
+        assertTrue(checkBalanceOfTree(tree.root));
+093
+        assertTrue(checkOrderingOfTree(tree.root));
+094
+        assertFalse(tree.contains(24));
+095
+         
+096
+        tree.remove(36);
+097
+        assertTrue(checkBalanceOfTree(tree.root));
+098
+        assertTrue(checkOrderingOfTree(tree.root));
+099
+        assertFalse(tree.contains(36));
+100
+         
+101
+        tree.remove(52);
+102
+        assertTrue(checkBalanceOfTree(tree.root));
+103
+        assertTrue(checkOrderingOfTree(tree.root));
+104
+        assertFalse(tree.contains(52));
+105
+         
+106
+        tree.remove(93);
+107
+        assertTrue(checkBalanceOfTree(tree.root));
+108
+        assertTrue(checkOrderingOfTree(tree.root));
+109
+        assertFalse(tree.contains(93));
+110
+         
+111
+        tree.remove(86);
+112
+        assertTrue(checkBalanceOfTree(tree.root));
+113
+        assertTrue(checkOrderingOfTree(tree.root));
+114
+        assertFalse(tree.contains(86));
+115
+         
+116
+        tree.remove(83);
+117
+        assertTrue(checkBalanceOfTree(tree.root));
+118
+        assertTrue(checkOrderingOfTree(tree.root));
+119
+        assertFalse(tree.contains(83));
+120
+    }
+121
+}
+*/
+
+/* Incomplete implementation of remove
 // TODO: comment block	
 	@SuppressWarnings("unchecked")
   public void remove(Comparable x){
@@ -306,6 +685,7 @@ class AvlTree {
         return t;
       }
   }
+*/
 
   /**
    * Search for an element within the tree. 
@@ -331,6 +711,7 @@ class AvlTree {
   protected boolean find(Comparable x, AvlNode t) {
     if (t == null){
       return false; // The node was not found
+
     } else if (x.compareTo(t.element) < 0){
       return find(x, t.left);
     } else if (x.compareTo(t.element) > 0){
