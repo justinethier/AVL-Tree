@@ -11,8 +11,58 @@ import java.lang.StringBuilder;
  *
  * @author Justin Ethier
  */
-class AvlTree {
-	private AvlNode root;
+class AvlTree<T extends Comparable<? super T>> {
+  /** 
+   * AvlNode is a container class that is used to store each element 
+   * (node) of an AVL tree. 
+   *  
+   * @author Justin Ethier
+   */
+  protected static class AvlNode<T> {
+  	
+  	/**
+  	 * Node data
+  	 */
+  	protected T	element;
+  	
+  	/**
+  	 * Left child
+  	 */
+  	protected AvlNode<T>		left;
+  	
+  	/**
+  	 * Right child
+  	 */
+  	protected AvlNode<T>		right;
+  	
+  	/**
+  	 * Height of node
+  	 */
+  	protected int			height;
+  	
+  	/**
+  	 * Constructor; creates a node without any children
+  	 * 
+  	 * @param theElement	The element contained in this node
+  	 */
+  	public AvlNode (T theElement){
+  		this (theElement, null, null);
+  	}
+  	
+  	/**
+  	 * Constructor; creates a node with children
+  	 * 
+  	 * @param theElement	The element contained in this node
+  	 * @param lt			Left child		
+  	 * @param rt			Right child
+  	 */
+  	public AvlNode (T theElement, AvlNode<T> lt, AvlNode<T> rt){
+  		element = theElement;
+  		left = lt;
+  		right = rt;
+  	}
+  }
+	private AvlNode<T> root;
 	
 	// TODO: make these optional based on some sort of 'debug' flag?
 	// at the very least, make them read-only properties
@@ -25,7 +75,7 @@ class AvlTree {
 	 * 
 	 * Creates an empty tree
 	 */
-	AvlTree (){
+	public AvlTree (){
 		root = null;
 				
 		countInsertions = 0;
@@ -39,7 +89,7 @@ class AvlTree {
 	 * @param t Node
 	 * @return Height of the given node.
 	 */
-	public static int height (AvlNode t){
+	public int height (AvlNode<T> t){
 		return t == null ? -1 : t.height;
 	}
 	
@@ -50,7 +100,7 @@ class AvlTree {
 	 * @param b Second number
 	 * @return Maximum value
 	 */	
-	public static int max (int a, int b){
+	public int max (int a, int b){
 		if (a > b)
 			return a;
 		return b;
@@ -63,8 +113,7 @@ class AvlTree {
 	 * @return True - Success, the Element was added. 
 	 *         False - Error, the element was a duplicate.
 	 */
-	@SuppressWarnings("unchecked")
-	public boolean insert (Comparable x){
+	public boolean insert (T x){
 		try {
 			root = insert (x, root);
 			
@@ -83,10 +132,9 @@ class AvlTree {
 	 * @return New root of the tree
 	 * @throws Exception 
 	 */
-	@SuppressWarnings("unchecked")
-	protected AvlNode insert (Comparable x, AvlNode t) throws Exception{
+	protected AvlNode<T> insert (T x, AvlNode<T> t) throws Exception{
 		if (t == null)
-			t = new AvlNode (x);
+			t = new AvlNode<T> (x);
 		else if (x.compareTo (t.element) < 0){
 			t.left = insert (x, t.left);
 			
@@ -130,8 +178,8 @@ class AvlTree {
 	 * @param k2 Root of tree we are rotating
 	 * @return New root
 	 */
-	protected static AvlNode rotateWithLeftChild (AvlNode k2){
-		AvlNode k1 = k2.left;
+	protected AvlNode<T> rotateWithLeftChild (AvlNode<T> k2){
+		AvlNode<T> k1 = k2.left;
 		
 		k2.left = k1.right;
 		k1.right = k2;
@@ -151,7 +199,7 @@ class AvlTree {
 	 * @param k3 Root of tree we are rotating
 	 * @return New root
 	 */
-	protected static AvlNode doubleWithLeftChild (AvlNode k3){
+	protected AvlNode<T> doubleWithLeftChild (AvlNode<T> k3){
 		k3.left = rotateWithRightChild (k3.left);
 		return rotateWithLeftChild (k3);
 	}
@@ -164,8 +212,8 @@ class AvlTree {
 	 * @param k1 Root of tree we are rotating.
 	 * @return New root
 	 */
-	protected static AvlNode rotateWithRightChild (AvlNode k1){
-		AvlNode k2 = k1.right;
+	protected AvlNode<T> rotateWithRightChild (AvlNode<T> k1){
+		AvlNode<T> k2 = k1.right;
 		
 		k1.right = k2.left;
 		k2.left = k1;
@@ -185,7 +233,7 @@ class AvlTree {
 	 * @param k1 Root of tree we are rotating
 	 * @return New root
 	 */
-	protected static AvlNode doubleWithRightChild (AvlNode k1){
+	protected AvlNode<T> doubleWithRightChild (AvlNode<T> k1){
 		k1.right = rotateWithLeftChild (k1.right);
 		return rotateWithRightChild (k1);
 	}
@@ -210,7 +258,7 @@ class AvlTree {
 	 * @param t		Tree node to traverse
 	 * @param str	Accumulator; string to keep appending items to.
 	 */
-	protected void serializeInfix(AvlNode t, StringBuilder str, String sep){
+	protected void serializeInfix(AvlNode<T> t, StringBuilder str, String sep){
 		if (t != null){
 			serializeInfix (t.left, str, sep);
 			str.append(t.element.toString());
@@ -239,7 +287,7 @@ class AvlTree {
 	 * @param t		Tree node to traverse
 	 * @param str	Accumulator; string to keep appending items to.
 	 */	
-	private void serializePrefix (AvlNode t, StringBuilder str, String sep){
+	private void serializePrefix (AvlNode<T> t, StringBuilder str, String sep){
 		if (t != null){
 			str.append(t.element.toString());
 			str.append(sep);
@@ -271,7 +319,7 @@ class AvlTree {
      * Find the smallest item in the tree.
      * @return smallest item or null if empty.
      */
-    public Comparable findMin( )
+    public T findMin( )
     {
         if( isEmpty( ) ) return null;
 
@@ -282,7 +330,7 @@ class AvlTree {
      * Find the largest item in the tree.
      * @return the largest item of null if empty.
      */
-    public Comparable findMax( )
+    public T findMax( )
     {
         if( isEmpty( ) ) return null;
         return findMax( root ).element;
@@ -293,7 +341,7 @@ class AvlTree {
      * @param t the node that roots the tree.
      * @return node containing the smallest item.
      */
-    private AvlNode findMin(AvlNode t) //<AnyType> findMin( AvlNode<AnyType> t )
+    private AvlNode<T> findMin(AvlNode<T> t)
     {
         if( t == null )
             return t;
@@ -308,7 +356,7 @@ class AvlTree {
      * @param t the node that roots the tree.
      * @return node containing the largest item.
      */
-    private AvlNode findMax( AvlNode t )
+    private AvlNode<T> findMax( AvlNode<T> t )
     {
         if( t == null )
             return t;
@@ -326,13 +374,11 @@ class AvlTree {
    * Remove from the tree. Nothing is done if x is not found.
    * @param x the item to remove.
    */
-  public void remove( Comparable x ) {
+  public void remove( T x ) {
       root = remove(x, root);
   }
 
-  //public AvlNode<AnyType> remove(AnyType x, AvlNode<AnyType> t) {
-  @SuppressWarnings("unchecked")
-  public AvlNode remove(Comparable x, AvlNode t) {
+  public AvlNode<T> remove(T x, AvlNode<T> t) {
       if (t==null)    {
           System.out.println("Sorry but you're mistaken, " + t + " doesn't exist in this tree :)\n");
           return null;
@@ -640,7 +686,6 @@ public class AvlTreeTest {
 
 /* Incomplete implementation of remove
 // TODO: comment block	
-	@SuppressWarnings("unchecked")
   public void remove(Comparable x){
     if (x.compareTo(root.element) == 0){
       // x is at root, remove it directly
@@ -650,7 +695,6 @@ public class AvlTreeTest {
     }
   }
 
-	@SuppressWarnings("unchecked")
   protected void remove(Comparable x, AvlNode t){
     if (t == null){
       return; // Node was not found, nothing to remove
@@ -695,8 +739,7 @@ public class AvlTreeTest {
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
-  @SuppressWarnings("unchecked")
-  public boolean find(Comparable x){ // TODO: would be more useful to store key/value,
+  public boolean find(T x){ // TODO: would be more useful to store key/value,
 	                                   // and use key to perform the lookup here...
     return find(x, root); 
   }
@@ -708,8 +751,7 @@ public class AvlTreeTest {
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
-  @SuppressWarnings("unchecked")
-  protected boolean find(Comparable x, AvlNode t) {
+  protected boolean find(T x, AvlNode<T> t) {
     if (t == null){
       return false; // The node was not found
 
@@ -726,7 +768,7 @@ public class AvlTreeTest {
 	 * Main entry point; contains test code for the tree.
 	 */
 	public static void main () { //String []args){
-		AvlTree t = new AvlTree();
+		AvlTree<Integer> t = new AvlTree<Integer>();
 		
 		t.insert (new Integer(2));
 		t.insert (new Integer(1));

@@ -12,7 +12,7 @@ class Test {
 	 * 
 	 * @return Tree with insertions
 	 */
-	public static void performInsertions(AvlTree t){
+	public static void performInsertions(AvlTree<Integer> t){
 		Random r = new Random();
 		int range = 500;
 		int count = 100;
@@ -40,7 +40,7 @@ class Test {
 	}
 	
 	public static void main (String []args){
-		AvlTree t = new AvlTree();
+		AvlTree<Integer> t = new AvlTree<Integer>();
 		int testCases = 10;
 		int insertionCount = 0;
 		int singleRotationCount = 0;
