@@ -411,10 +411,11 @@ class AvlTree<T extends Comparable<? super T>> {
                   t = doubleWithLeftChild(t);
           }
       }
-      /*Här har vi hamnat när vi står i noden som skall tas bort. Kolla om det finns ett vänstra delträd, isåfall plocka ut det största elementet och
-  41
-       * flytta ner det till rooten. */
-      else if(t.left !=null) {
+      /*
+         Here, we have ended up when we are node which shall be removed. 
+         Check if there is a left-hand node, if so pick out the largest element out, and move down to the root.
+       */
+      else if(t.left != null) {
           t.element = findMax(t.left).element;
           remove(t.element, t.left);
        
