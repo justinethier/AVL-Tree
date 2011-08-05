@@ -321,77 +321,78 @@ class AvlTree {
 
 // A version of remove from http://www.dreamincode.net/forums/topic/214510-working-example-of-avl-tree-remove-method/
 // but it needs some attention and does not appear to be 100% correct
-/**
- * Remove from the tree. Nothing is done if x is not found.
- * @param x the item to remove.
- */
-public void remove( Comparable x ) {
-    root = remove(x, root);
-}
 
-//public AvlNode<AnyType> remove(AnyType x, AvlNode<AnyType> t) {
-@SuppressWarnings("unchecked")
-public AvlNode remove(Comparable x, AvlNode t) {
-    if (t==null)    {
-        System.out.println("Sorry but you're mistaken, " + t + " doesn't exist in this tree :)\n");
-        return null;
-    }
-    System.out.println("Remove starts... " + t.element + " and " + x);
+  /**
+   * Remove from the tree. Nothing is done if x is not found.
+   * @param x the item to remove.
+   */
+  public void remove( Comparable x ) {
+      root = remove(x, root);
+  }
 
-    if (x.compareTo(t.element) < 0 ) {
-        t.left = remove(x,t.left);
-        int l = t.left != null ? t.left.height : 0;
-
-        if((t.right != null) && (t.right.height - l >= 2)) {
-            int rightHeight = t.right.right != null ? t.right.right.height : 0;
-            int leftHeight = t.right.left != null ? t.right.left.height : 0;
-
-            if(rightHeight >= leftHeight)
-                t = rotateWithLeftChild(t);            
-            else
-                t = doubleWithRightChild(t);
-        }
-    }
-    else if (x.compareTo(t.element) > 0) {
-        t.right = remove(x,t.right);
-        int r = t.right != null ? t.right.height : 0;
-        if((t.left != null) && (t.left.height - r >= 2)) {
-            int leftHeight = t.left.left != null ? t.left.left.height : 0;
-            int rightHeight = t.left.right != null ? t.left.right.height : 0;
-            if(leftHeight >= rightHeight)
-                t = rotateWithRightChild(t);               
-            else
-                t = doubleWithLeftChild(t);
-        }
-    }
-    /*Här har vi hamnat när vi står i noden som skall tas bort. Kolla om det finns ett vänstra delträd, isåfall plocka ut det största elementet och
-41
-     * flytta ner det till rooten. */
-    else if(t.left !=null) {
-        t.element = findMax(t.left).element;
-        remove(t.element, t.left);
-     
-        if((t.right != null) && (t.right.height - t.left.height >= 2)) {
-            int rightHeight = t.right.right != null ? t.right.right.height : 0;
-            int leftHeight = t.right.left != null ? t.right.left.height : 0;
-     
-            if(rightHeight >= leftHeight)
-                t = rotateWithLeftChild(t);            
-            else
-                t = doubleWithRightChild(t);
-        }
-    }
-     
-    else
-        t = (t.left != null) ? t.left : t.right;
-     
-    if(t != null) {
-        int leftHeight = t.left != null ? t.left.height : 0;
-        int rightHeight = t.right!= null ? t.right.height : 0;
-        t.height = Math.max(leftHeight,rightHeight) + 1;
-    }
-    return t;
-} //End of remove...
+  //public AvlNode<AnyType> remove(AnyType x, AvlNode<AnyType> t) {
+  @SuppressWarnings("unchecked")
+  public AvlNode remove(Comparable x, AvlNode t) {
+      if (t==null)    {
+          System.out.println("Sorry but you're mistaken, " + t + " doesn't exist in this tree :)\n");
+          return null;
+      }
+      System.out.println("Remove starts... " + t.element + " and " + x);
+  
+      if (x.compareTo(t.element) < 0 ) {
+          t.left = remove(x,t.left);
+          int l = t.left != null ? t.left.height : 0;
+  
+          if((t.right != null) && (t.right.height - l >= 2)) {
+              int rightHeight = t.right.right != null ? t.right.right.height : 0;
+              int leftHeight = t.right.left != null ? t.right.left.height : 0;
+  
+              if(rightHeight >= leftHeight)
+                  t = rotateWithLeftChild(t);            
+              else
+                  t = doubleWithRightChild(t);
+          }
+      }
+      else if (x.compareTo(t.element) > 0) {
+          t.right = remove(x,t.right);
+          int r = t.right != null ? t.right.height : 0;
+          if((t.left != null) && (t.left.height - r >= 2)) {
+              int leftHeight = t.left.left != null ? t.left.left.height : 0;
+              int rightHeight = t.left.right != null ? t.left.right.height : 0;
+              if(leftHeight >= rightHeight)
+                  t = rotateWithRightChild(t);               
+              else
+                  t = doubleWithLeftChild(t);
+          }
+      }
+      /*Här har vi hamnat när vi står i noden som skall tas bort. Kolla om det finns ett vänstra delträd, isåfall plocka ut det största elementet och
+  41
+       * flytta ner det till rooten. */
+      else if(t.left !=null) {
+          t.element = findMax(t.left).element;
+          remove(t.element, t.left);
+       
+          if((t.right != null) && (t.right.height - t.left.height >= 2)) {
+              int rightHeight = t.right.right != null ? t.right.right.height : 0;
+              int leftHeight = t.right.left != null ? t.right.left.height : 0;
+       
+              if(rightHeight >= leftHeight)
+                  t = rotateWithLeftChild(t);            
+              else
+                  t = doubleWithRightChild(t);
+          }
+      }
+       
+      else
+          t = (t.left != null) ? t.left : t.right;
+       
+      if(t != null) {
+          int leftHeight = t.left != null ? t.left.height : 0;
+          int rightHeight = t.right!= null ? t.right.height : 0;
+          t.height = Math.max(leftHeight,rightHeight) + 1;
+      }
+      return t;
+  } //End of remove...
 
 /* snippet of test code, and a potential fix?
 	import static org.junit.Assert.*;
