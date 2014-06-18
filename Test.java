@@ -137,7 +137,7 @@ class Test {
   public static void performInsertions(AvlTree<Integer> t){
     Random r = new Random();
     int range = 9999999;
-    int count = 9999999;
+    int count = 999999;
     Integer x;        
     
     // Delete any old nodes from the tree
