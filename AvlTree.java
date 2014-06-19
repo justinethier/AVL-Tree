@@ -62,7 +62,8 @@ class AvlTree<T extends Comparable<? super T>> {
       right = rt;
     }
   }
-  private AvlNode<T> root;
+
+  public AvlNode<T> root;
   
   // TODO: make these optional based on some sort of 'debug' flag?
   // at the very least, make them read-only properties
@@ -448,9 +449,8 @@ class AvlTree<T extends Comparable<? super T>> {
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
-  public boolean find(T x){ // TODO: would be more useful to store key/value,
-                                     // and use key to perform the lookup here...
-    return find(x, root); 
+  public boolean contains(T x){
+    return contains(x, root); 
   }
 
   /**
@@ -460,22 +460,70 @@ class AvlTree<T extends Comparable<? super T>> {
    * @param t Root of the tree
    * @return True if the element is found, false otherwise
    */
-  protected boolean find(T x, AvlNode<T> t) {
+  protected boolean contains(T x, AvlNode<T> t) {
     if (t == null){
       return false; // The node was not found
 
     } else if (x.compareTo(t.element) < 0){
-      return find(x, t.left);
+      return contains(x, t.left);
     } else if (x.compareTo(t.element) > 0){
-      return find(x, t.right); 
+      return contains(x, t.right); 
     }
 
     return true; // Can only reach here if node was found
   }
   
+  /***********************************************************************/
+  // Diagnostic functions for the tree
+  public boolean checkBalanceOfTree(AvlTree.AvlNode<Integer> current) {
+    
+    boolean balancedRight = true, balancedLeft = true;
+    int leftHeight = 0, rightHeight = 0;
+    
+    if (current.right != null) {
+      balancedRight = checkBalanceOfTree(current.right);
+      rightHeight = getDepth(current.right);
+    }
+    
+    if (current.left != null) {
+      balancedLeft = checkBalanceOfTree(current.left);
+      leftHeight = getDepth(current.left);
+    }
+    
+    return balancedLeft && balancedRight && Math.abs(leftHeight - rightHeight) < 2;
+  }
+  
+  public int getDepth(AvlTree.AvlNode<Integer> n) {
+    int leftHeight = 0, rightHeight = 0;
+    
+    if (n.right != null)
+      rightHeight = getDepth(n.right);
+    if (n.left != null)
+      leftHeight = getDepth(n.left);
+    
+    return Math.max(rightHeight, leftHeight)+1;
+  }
+  
+  public boolean checkOrderingOfTree(AvlTree.AvlNode<Integer> current) {
+    if(current.left != null) {
+      if(current.left.element.compareTo(current.element) > 0)
+        return false;
+      else
+        return checkOrderingOfTree(current.left);
+    } else  if(current.right != null) {
+      if(current.right.element.compareTo(current.element) < 0)
+        return false;
+      else
+        return checkOrderingOfTree(current.right);
+    } else if(current.left == null && current.right == null)
+      return true;
+    
+    return true;
+  }
+
   /**
    * Main entry point; contains test code for the tree.
-   */
+   *
   public static void main () { //String []args){
     AvlTree<Integer> t = new AvlTree<Integer>();
     
@@ -493,5 +541,5 @@ class AvlTree<T extends Comparable<? super T>> {
     
     System.out.println ("Prefix Traversal:");
     System.out.println(t.serializePrefix());
-  }
+  }*/
 }

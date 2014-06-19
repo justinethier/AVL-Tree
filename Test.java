@@ -177,5 +177,7 @@ class Test {
     System.out.println ("Total Insertions:       " + insertionCount);
     System.out.println ("Total Single Rotations: " + singleRotationCount);
     System.out.println ("Total Double Rotations: " + doubleRotationCount);
+    System.out.println ("Ordering: " + t.checkOrderingOfTree(t.root));
+    System.out.println ("Balance: " + t.checkBalanceOfTree(t.root));
   }
 }
