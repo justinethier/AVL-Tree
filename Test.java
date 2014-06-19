@@ -164,7 +164,7 @@ class Test {
   
   public static void main (String []args){
     AvlTree<Integer> t = new AvlTree<Integer>();
-    int testCases = 10;
+    int testCases = 10, i;
     int insertionCount = 0;
     int singleRotationCount = 0;
     int doubleRotationCount = 0;
@@ -177,6 +177,18 @@ class Test {
     System.out.println ("Total Insertions:       " + insertionCount);
     System.out.println ("Total Single Rotations: " + singleRotationCount);
     System.out.println ("Total Double Rotations: " + doubleRotationCount);
+    System.out.println ("Ordering: " + t.checkOrderingOfTree(t.root));
+    System.out.println ("Balance: " + t.checkBalanceOfTree(t.root));
+
+    t = new AvlTree<Integer>();
+    for (i = 0; i < 100; i++){
+        t.insert(i);
+    }
+    System.out.println ("Ordering: " + t.checkOrderingOfTree(t.root));
+    System.out.println ("Balance: " + t.checkBalanceOfTree(t.root));
+    for (i = 0; i < 50; i++){
+        t.remove(i);
+    }
     System.out.println ("Ordering: " + t.checkOrderingOfTree(t.root));
     System.out.println ("Balance: " + t.checkBalanceOfTree(t.root));
   }
