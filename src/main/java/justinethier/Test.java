@@ -1,3 +1,5 @@
+package justinethier;
+
 import java.util.Random;
 
 /* snippet of test code, and a potential fix?
@@ -7,7 +9,7 @@ import org.junit.Test;
  
 */
 
-class Test {
+public class Test {
   
     private AvlTree<Integer> tree = new AvlTree<Integer>();
  
